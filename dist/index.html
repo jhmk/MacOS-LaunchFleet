@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaunchFleet</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Top Bar. data-tauri-drag-region makes the overlay title bar draggable. -->
+    <header class="topbar" data-tauri-drag-region>
+      <div class="brand" data-tauri-drag-region>
+        <span class="rocket" aria-hidden="true">🚀</span>
+        <span class="title">LaunchFleet</span>
+      </div>
+      <div class="controls">
+        <label class="visually-hidden" for="search">Search startup items</label>
+        <input id="search" type="search" placeholder="Search startup items…" autocomplete="off" />
+        <button id="refresh-btn" class="btn-icon" title="Refresh (⌘R)" aria-label="Refresh list">↻</button>
+        <button id="quarantine-btn" class="btn btn-secondary" title="Show removed items you can restore">
+          Quarantine <span class="count" id="count-quarantine">0</span>
+        </button>
+        <button id="system-mode-btn" class="btn btn-secondary" aria-pressed="false"
+                title="Enable System Mode (one-time authorization)">
+          <span class="badge-dot off" id="sys-mode-dot" aria-hidden="true"></span>
+          System Mode
+        </button>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs" id="tabs" aria-label="Filter by source">
+      <button class="tab active" data-filter="all" aria-current="true">All <span class="count" id="count-all">0</span></button>
+      <button class="tab" data-filter="LoginItem">Login Items <span class="count" id="count-login">0</span></button>
+      <button class="tab" data-filter="UserLaunchAgent">User Agents <span class="count" id="count-user">0</span></button>
+      <button class="tab" data-filter="SystemLaunchAgent">System Agents <span class="count" id="count-system">0</span></button>
+      <button class="tab" data-filter="LaunchDaemon">Daemons <span class="count" id="count-daemon">0</span></button>
+      <button class="tab" data-filter="LoginHook">Hooks <span class="count" id="count-hook">0</span></button>
+      <button class="tab" data-filter="CronJob">Cron <span class="count" id="count-cron">0</span></button>
+    </nav>
+
+    <!-- Filters -->
+    <div class="filters">
+      <label class="filter-chip">
+        <input type="checkbox" id="filter-third-party" />
+        <span>Third-party only</span>
+      </label>
+      <label class="filter-chip">
+        <input type="checkbox" id="filter-enabled" />
+        <span>Enabled only</span>
+      </label>
+      <label class="filter-chip">
+        <input type="checkbox" id="filter-orphans" />
+        <span>Orphans only</span>
+      </label>
+      <label class="filter-chip">
+        <input type="checkbox" id="filter-mine" checked />
+        <span>My account only</span>
+      </label>
+    </div>
+
+    <!-- List -->
+    <main class="list-container">
+      <div id="list" class="item-list" role="list"></div>
+      <div id="empty" class="empty-state hidden">
+        <p>No items match your filters.</p>
+      </div>
+      <div id="loading" class="loading">Loading startup items…</div>
+    </main>
+
+    <!-- Status Bar -->
+    <footer class="statusbar">
+      <span id="status-text">Loading…</span>
+      <span id="toast" class="toast hidden" role="status" aria-live="polite"></span>
+    </footer>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2 id="detail-title">Item Details</h2>
+          <button id="detail-close" class="btn-close" aria-label="Close">×</button>
+        </header>
+        <div id="detail-body" class="modal-body"></div>
+        <footer class="modal-footer">
+          <button id="detail-reveal" class="btn">Reveal in Finder</button>
+          <button id="detail-system-settings" class="btn">Open in System Settings</button>
+          <span class="footer-spacer"></span>
+          <button id="detail-enable" class="btn">Enable</button>
+          <button id="detail-disable" class="btn btn-primary">Disable</button>
+          <button id="detail-delete" class="btn btn-danger">Remove…</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Quarantine Modal -->
+    <div id="quarantine-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quarantine-title">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2 id="quarantine-title">Quarantine</h2>
+          <button id="quarantine-close" class="btn-close" aria-label="Close">×</button>
+        </header>
+        <div class="modal-body">
+          <p class="note">
+            Removed items are moved here instead of being deleted, so you can put them back
+            if something stops working.
+          </p>
+          <div id="quarantine-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div id="welcome-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content welcome">
+        <h1 id="welcome-title">Welcome to LaunchFleet 🚀</h1>
+        <p>Manage what apps and services start with your Mac.</p>
+        <ul class="feature-list">
+          <li>✓ See <strong>all</strong> startup items in one place</li>
+          <li>✓ Toggle items on/off with one click</li>
+          <li>✓ Identify orphaned and high-impact items</li>
+          <li>✓ User-level items: no password needed</li>
+          <li>✓ System items: <strong>one</strong> authorization for the whole session</li>
+          <li>✓ Removals go to a quarantine you can restore from</li>
+        </ul>
+        <p class="note">
+          By default, only your user-level items can be modified. Click <strong>System Mode</strong>
+          if you also want to manage system-wide daemons.
+        </p>
+        <button id="welcome-close" class="btn btn-primary btn-large">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

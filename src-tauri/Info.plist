@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Required for the AppleScript toggle path. Without this key TCC blocks the
+	  Apple Event with errAEEventNotPermitted (-1743) and shows no prompt at
+	  all, so disabling legacy login items silently fails in a bundled .app.
+	  This does not reproduce under `cargo tauri dev`, which inherits the
+	  terminal's Automation grants.
+	-->
+	<key>NSAppleEventsUsageDescription</key>
+	<string>LaunchFleet uses System Events to disable login items you choose to turn off.</string>
+
+	<!-- Reading other users' LaunchAgents and the full BTM database needs Full Disk Access. -->
+	<key>NSSystemAdministrationUsageDescription</key>
+	<string>LaunchFleet reads launchd configuration in /Library to show every item that starts with your Mac.</string>
+
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+
+	<!-- Utility with a single window: no need to stay running with no windows. -->
+	<key>LSUIElement</key>
+	<false/>
+
+	<key>NSHumanReadableCopyright</key>
+	<string>MIT Licensed</string>
+</dict>
+</plist>

@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default capabilities for LaunchFleet. The shell plugin is deliberately absent: all process execution happens in Rust behind typed commands, so the webview has no way to run arbitrary programs.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "dialog:default"
+  ]
+}

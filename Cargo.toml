@@ -1,0 +1,21 @@
+[workspace]
+members = ["src-tauri"]
+resolver = "2"
+
+# Cargo only honours profiles declared at the workspace root.
+#
+# `panic = "abort"` is deliberately NOT set: it breaks proc-macro compilation
+# in this dependency tree, and unwinding lets Tauri turn a panic inside a
+# command into an error response instead of taking the whole app down.
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+
+# Stripping a proc-macro dylib on macOS corrupts it ("mis-aligned LINKEDIT
+# string pool") and the compiler can then no longer dlopen it. build-override
+# covers build scripts, proc macros and their dependencies, so the setting
+# above applies only to the shipped binary.
+[profile.release.build-override]
+strip = false

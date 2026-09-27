@@ -1,0 +1,32 @@
+[package]
+name = "launch-fleet"
+version = "0.1.0"
+edition = "2021"
+description = "macOS Startup Manager"
+default-run = "launch-fleet"
+
+[lib]
+name = "launch_fleet_lib"
+# Desktop-only: `staticlib`/`cdylib` are mobile-target boilerplate and only
+# added link time here.
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["macos-private-api"] }
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+plist = "1"
+core-foundation = "0.10"
+libc = "0.2"
+window-vibrancy = "0.6"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+# NOTE: [profile.release] lives in the workspace root Cargo.toml — Cargo ignores
+# profiles declared in non-root packages.

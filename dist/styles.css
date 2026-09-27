@@ -1,0 +1,809 @@
+/* ───────── Reset & Base ───────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #1e1e1e;
+  --bg-elevated: #2a2a2a;
+  --bg-hover: #333;
+  --bg-active: #3a3a3a;
+  --border: #3a3a3a;
+  --text: #e8e8e8;
+  --text-muted: #999;
+  --text-dim: #666;
+  --accent: #0a84ff;
+  --accent-hover: #339cff;
+  --green: #30d158;
+  --red: #ff453a;
+  --yellow: #ffd60a;
+  --orange: #ff9f0a;
+  --purple: #bf5af2;
+  --blue: #64d2ff;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f5f5f7;
+    --bg-elevated: #ffffff;
+    --bg-hover: #f0f0f2;
+    --bg-active: #e8e8ea;
+    --border: #d2d2d7;
+    --text: #1d1d1f;
+    --text-muted: #6e6e73;
+    --text-dim: #8e8e93;
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+  }
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ───────── Top Bar ───────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  -webkit-app-region: drag;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  padding-left: 70px; /* leave room for traffic lights */
+}
+
+.rocket {
+  font-size: 18px;
+}
+
+.controls {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+#search {
+  flex: 1;
+  max-width: 400px;
+  padding: 6px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+#search:focus {
+  border-color: var(--accent);
+}
+
+#search::placeholder {
+  color: var(--text-dim);
+}
+
+/* ───────── Buttons ───────── */
+.btn, .btn-icon {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 6px 12px;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover, .btn-icon:hover {
+  background: var(--bg-hover);
+}
+
+.btn:active, .btn-icon:active {
+  background: var(--bg-active);
+}
+
+.btn-icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-danger {
+  background: var(--red);
+  color: white;
+  border-color: var(--red);
+}
+
+.btn-danger:hover {
+  filter: brightness(1.1);
+}
+
+.btn-large {
+  padding: 10px 24px;
+  font-size: 14px;
+}
+
+.btn-secondary {
+  position: relative;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.badge-dot.off {
+  background: var(--text-dim);
+}
+
+.badge-dot.on {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
+.btn-close {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 24px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.btn-close:hover {
+  background: var(--bg-hover);
+}
+
+/* ───────── Tabs ───────── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 16px 0;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 8px 14px;
+  border-radius: 6px 6px 0 0;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tab:hover {
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+.tab.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+  background: var(--bg);
+}
+
+.count {
+  background: var(--bg-active);
+  color: var(--text-muted);
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.tab.active .count {
+  background: var(--accent);
+  color: white;
+}
+
+/* ───────── Filters ───────── */
+.filters {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.filter-chip:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.filter-chip input {
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.filter-chip:has(input:checked) {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* ───────── List ───────── */
+.list-container {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 100px 80px 80px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.item-row:hover {
+  background: var(--bg-hover);
+}
+
+.item-row:active {
+  background: var(--bg-active);
+}
+
+.item-row.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-switch {
+  width: 32px;
+  height: 18px;
+  background: var(--bg-active);
+  border-radius: 9px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle-switch.on {
+  background: var(--green);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  transition: left 0.2s;
+}
+
+.toggle-switch.on::after {
+  left: 16px;
+}
+
+.toggle-switch.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.item-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-name {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "SF Mono", Menlo, monospace;
+}
+
+.lock-icon {
+  font-size: 11px;
+}
+
+.warn-icon {
+  font-size: 11px;
+  color: var(--orange);
+}
+
+.impact-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.impact-HIGH { background: rgba(255, 69, 58, 0.15); color: var(--red); }
+.impact-MED  { background: rgba(255, 159, 10, 0.15); color: var(--orange); }
+.impact-LOW  { background: rgba(48, 209, 88, 0.15); color: var(--green); }
+.impact-MIN  { background: rgba(142, 142, 147, 0.15); color: var(--text-muted); }
+
+.source-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.source-USER   { background: rgba(10, 132, 255, 0.15); color: var(--accent); }
+.source-SYSTEM { background: rgba(191, 90, 242, 0.15); color: var(--purple); }
+.source-APPLE  { background: rgba(142, 142, 147, 0.15); color: var(--text-muted); }
+
+.run-state {
+  font-size: 11px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.run-state.running {
+  color: var(--green);
+  font-weight: 500;
+}
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.loading {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ───────── Status Bar ───────── */
+.statusbar {
+  padding: 8px 16px;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.toast {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+  animation: fadeIn 0.2s;
+}
+
+.toast.success { background: var(--green); color: white; }
+.toast.error   { background: var(--red); color: white; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ───────── Modal ───────── */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  position: relative;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.footer-spacer {
+  flex: 1;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-key {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.detail-value {
+  color: var(--text);
+  word-break: break-all;
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 11px;
+}
+
+/* ───────── Welcome ───────── */
+.welcome {
+  text-align: center;
+  padding: 40px;
+  max-width: 500px;
+}
+
+.welcome h1 {
+  font-size: 28px;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.welcome p {
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.welcome p.note {
+  font-size: 12px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 6px;
+  text-align: left;
+}
+
+.feature-list {
+  list-style: none;
+  text-align: left;
+  margin: 24px 0;
+  padding: 16px;
+  background: var(--bg);
+  border-radius: 8px;
+}
+
+.feature-list li {
+  padding: 6px 0;
+  font-size: 13px;
+}
+
+/* ───────── Scrollbar ───────── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   macOS 26/27 (Liquid Glass) adaptation, accessibility and new panels.
+   Appended so the base theme above stays intact.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ───────── Native window material ─────────
+   The window is transparent and backed by an NSVisualEffectView, so the app
+   must not paint its own opaque background. */
+html, body {
+  background: transparent;
+}
+
+#app {
+  background: transparent;
+}
+
+.topbar {
+  background: transparent;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  /* titleBarStyle:"Overlay" puts the traffic lights over our content. */
+  padding-top: 14px;
+}
+
+.tabs,
+.filters,
+.statusbar {
+  background: transparent;
+}
+
+.item-row {
+  /* room for the new details button */
+  grid-template-columns: 40px 1fr 100px 96px 80px 32px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.modal-content {
+  /* Concentric-ish radius matching macOS 26 sheet geometry. */
+  border-radius: 14px;
+}
+
+/* Users who turn transparency down get a solid surface instead. */
+@media (prefers-reduced-transparency: reduce) {
+  html, body, #app { background: var(--bg); }
+  .topbar { background: var(--bg-elevated); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ───────── Accessibility ───────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keyboard focus must be visible everywhere — the old markup used inert
+   <div>s that could not be focused at all. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* The toggle is now a real <button role="switch">; strip button chrome but
+   keep the visual design from the base stylesheet. */
+.toggle-switch {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.toggle-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.row-details {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.row-details:hover {
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+/* ───────── New badges ───────── */
+.source-badge.source-FOREIGN {
+  background: color-mix(in srgb, var(--purple) 22%, transparent);
+  color: var(--purple);
+}
+
+.user-icon {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.run-state[title] {
+  cursor: help;
+}
+
+/* ───────── Quarantine ───────── */
+#quarantine-btn.has-items {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.quarantine-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.quarantine-row:last-child {
+  border-bottom: none;
+}
+
+.quarantine-row .item-label {
+  word-break: break-all;
+}
+
+#quarantine-list {
+  margin-top: 12px;
+}
+
+/* ───────── Error surface ───────── */
+.fatal {
+  color: var(--red);
+  text-align: left;
+  padding: 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  white-space: pre-wrap;
+  user-select: text;
+}
+
+/* Paths and labels should be copyable. */
+.detail-value,
+.item-label {
+  user-select: text;
+}
